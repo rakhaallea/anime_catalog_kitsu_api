@@ -18,6 +18,10 @@ const nextBtn = document.getElementById("nextBtn");
 const lastBtn = document.getElementById("lastBtn");
 const pageNumbersContainer = document.getElementById("pageNumbers");
 
+const animeModal = document.getElementById('animeModal');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const modalBody = document.getElementById('modalBody');
+
 // LOGIKA DYNAMIC SLIDING WINDOW PAGINATION
 function renderPageNumbers() {
     pageNumbersContainer.innerHTML = "";
@@ -107,6 +111,64 @@ function renderAnime(animeList) {
         }).join('');
 }
 
+async function openAnimeModal(animeId) {
+    modalBody.innerHTML = `<div class="loading">Memuat detail anime...</div>`;
+    animeModal.classList.remove('hidden');
+
+    try {
+        const anime = await fetchAnimeDetailById(animeId);
+        const attr = anime.attributes;
+
+        const posterUrl = attr.posterImage?.large || attr.posterImage?.medium || 'https://placehold.co/300x400?text=No+Image';
+        const score = attr.averageRating ? (attr.averageRating / 10).toFixed(1) : 'N/A';
+        const youtubeId = attr.youtubeVideoId;
+
+        modalBody.innerHTML = `
+            <div class="modal-grid">
+                <div class="modal-poster">
+                    <img src="${posterUrl}" alt="${attr.canonicalTitle}">
+                </div>
+                
+                <div class="modal-details">
+                    <h2>${attr.canonicalTitle}</h2>
+                    
+                    <div class="modal-meta">
+                        <span class="badge">${attr.subtype || 'N/A'}</span>
+                        <span class="badge score">⭐ ${score}</span>
+                        <span class="badge" style="background-color: #10b981;">${attr.status || 'N/A'}</span>
+                    </div>
+                    
+                    <p><strong>Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
+                    <p><strong>Rilis:</strong> ${attr.startDate} || 'N/A'</p>
+                    
+                    <br>
+                    <h3>Sinopsis</h3>
+                    <p class="modal-synopsis">
+                        ${attr.synopsis || 'Sinopsis tidak tersedia.'}
+                    </p>
+                </div>
+            </div>
+
+            ${
+                youtubeId ? `
+                <h3>Trailer Resmi</h3>
+                    <div class="trailer-container">
+                        <iframe 
+                            src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
+                            title="YouTube video player" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                ` : `<p><em>Trailer tidak tersedia untuk anime ini.</em></p>`
+            }
+        `
+    } catch (error) {
+        modalBody.innerHTML = `<div class="error-msg">${error.message}</div>`;
+        console.error(error)
+    }
+}
+
 // MAIN CONTROLLER
 async function loadAnimeData(){
     showLoading();
@@ -128,6 +190,11 @@ async function loadAnimeData(){
             throw error;
         }
     }
+}
+
+function closeModal() {
+    animeModal.classList.add('hidden');
+    modalBody.innerHTML = '';
 }
 
 // EVENT LISTENERS INTERAKSI USER
@@ -177,6 +244,28 @@ lastBtn.addEventListener("click", () => {
         loadAnimeData();
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
+})
+
+animeContainer.addEventListener('click', (e) => {
+    const card = e.target.closest('.anime-card');
+    if(card) {
+        const animeId = card.dataset.id;
+        openAnimeModal(animeId);
+    }
+});
+
+closeModalBtn.addEventListener('click', closeModal);
+
+animeModal.addEventListener('click', (e) => {
+    if(e.target === animeModal){
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && !animeModal.classList.contains('hidden')) {
+        closeModal();
+    };
 })
 
 document.addEventListener("DOMContentLoaded", loadAnimeData);

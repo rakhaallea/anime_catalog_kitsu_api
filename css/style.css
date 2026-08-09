@@ -1,14 +1,22 @@
 /* VARIABLES & RESET CSS */
 
 :root {
-    --bg-primary: #0f172a;               /* Warna background utama (Dark Slate) */
-    --bg-card: rgba(30, 41, 59, 0.7);     /* Background kartu transparan (Glassmorphism) */
-    --bg-input: #1e293b;                /* Background kolom input */
-    --accent-color: #8b5cf6;            /* Warna aksen utama (Ungu Indigo) */
-    --accent-hover: #7c3aed;            /* Warna aksen saat tombol di-hover */
-    --text-main: #f8fafc;               /* Warna teks utama */
-    --text-muted: #94a3b8;              /* Warna teks sekunder/pudar */
-    --badge-bg: #3b82f6;                /* Warna badge tipe anime (Biru) */
+    --bg-primary: #0f172a;
+    /* Warna background utama (Dark Slate) */
+    --bg-card: rgba(30, 41, 59, 0.7);
+    /* Background kartu transparan (Glassmorphism) */
+    --bg-input: #1e293b;
+    /* Background kolom input */
+    --accent-color: #8b5cf6;
+    /* Warna aksen utama (Ungu Indigo) */
+    --accent-hover: #7c3aed;
+    /* Warna aksen saat tombol di-hover */
+    --text-main: #f8fafc;
+    /* Warna teks utama */
+    --text-muted: #94a3b8;
+    /* Warna teks sekunder/pudar */
+    --badge-bg: #3b82f6;
+    /* Warna badge tipe anime (Biru) */
     --border-color: rgba(255, 255, 255, 0.1);
     --radius: 12px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -23,7 +31,7 @@
 
 body {
     background-color: var(--bg-primary);
-    background-image: 
+    background-image:
         radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
     background-attachment: fixed;
@@ -32,7 +40,7 @@ body {
     padding: 2rem 1rem;
 }
 
-.app-container{
+.app-container {
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -59,7 +67,8 @@ header h1 {
     margin: 0 auto;
 }
 
-input[type="text"], select {
+input[type="text"],
+select {
     background-color: var(--bg-input);
     border: 1px solid var(--border-color);
     color: var(--text-main);
@@ -70,11 +79,12 @@ input[type="text"], select {
     transition: var(--transition);
 }
 
-input[type="text"]{
+input[type="text"] {
     flex: 1;
 }
 
-input[type="text"]:focus, select:focus {
+input[type="text"]:focus,
+select:focus {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
 }
@@ -102,7 +112,7 @@ input[type="text"]:focus, select:focus {
     cursor: pointer
 }
 
-.anime-card:hover{
+.anime-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 24px rgba(0, 0, 0, .4), 0 0 15px rgba(139, 92, 246, .3);
     border-color: var(--accent-color);
@@ -129,11 +139,12 @@ input[type="text"]:focus, select:focus {
     font-size: .75rem;
     font-weight: 600;
     padding: .2rem .6rem;
+    border: 1px solid transparent;
     border-radius: 20px;
     text-transform: uppercase;
 }
 
-.score {
+.anime-info .score {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -164,7 +175,9 @@ input[type="text"]:focus, select:focus {
 }
 
 /* UI STATES (LOADING, EMPTY, ERROR) */
-.loading, .empty, .error-msg {
+.loading,
+.empty,
+.error-msg {
     grid-column: 1 / -1;
     text-align: center;
     padding: 3rem 1rem;
@@ -184,7 +197,8 @@ input[type="text"]:focus, select:focus {
     flex-wrap: wrap;
 }
 
-.page-btn, .num-btn {
+.page-btn,
+.num-btn {
     background-color: var(--bg-input);
     color: var(--text-main);
     border: 1px solid var(--border-color);
@@ -195,7 +209,8 @@ input[type="text"]:focus, select:focus {
     transition: var(--transition);
 }
 
-.page-btn:hover:not(:disabled), .num-btn:hover:not(.active) {
+.page-btn:hover:not(:disabled),
+.num-btn:hover:not(.active) {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
     transform: translateY(-2px);
@@ -219,3 +234,136 @@ input[type="text"]:focus, select:focus {
     box-shadow: 0 0 10px rgba(139, 92, 246, .5);
 }
 
+/* MODAL DETAIL & OVERLAY STYLING */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    color: var(--text-main);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+    background-color: #f87171;
+    color: #FFF;
+    border-color: #f87171;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-poster img {
+    width: 100%;
+    border-radius: var(--radius);
+    object-fit: cover;
+}
+
+.modal-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: .5rem;
+    color: var(--text-main);
+}
+
+.modal-meta {
+    display: flex;
+    gap: .8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.modal-meta .score {
+    background-color: rgba(15, 23, 42, .85);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, .3);
+}
+
+.modal-synopsis {
+    line-height: 1.6;
+    color: var(--text-muted);
+    font-size: .95rem;
+    margin-bottom: 1rem;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.trailer-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    margin-top: 1rem;
+}
+
+.trailer-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+@media (max-width: 650px) {
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-poster img {
+        max-height: 300px;
+    }
+}

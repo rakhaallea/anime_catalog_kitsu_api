@@ -42,3 +42,25 @@ async function fetchAnimeFromKitsu(query = '', subtype = '', page = 1, limit = 2
         throw error;
     }
 }
+
+async function fetchAnimeDetailById(id){
+    try {
+        const endpoint = `${BASE_URL}/anime/${id}`
+        const response = await fetch(endpoint, {
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json'
+            }
+        });
+
+        if(!response.ok){
+            throw new Error(`Gagal memuat detail anime (Status: ${response.status})`);
+        }
+
+        const json = await response.json();
+        return json.data;
+    } catch (error) {
+        console.error('Fetch Detail Error:', error);
+        throw error;
+    }
+}
