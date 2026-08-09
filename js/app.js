@@ -139,7 +139,7 @@ async function openAnimeModal(animeId) {
                     </div>
                     
                     <p><strong>Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
-                    <p><strong>Rilis:</strong> ${attr.startDate} || 'N/A'</p>
+                    <p><strong>Rilis:</strong> ${attr.startDate || 'N/A'}</p>
                     
                     <br>
                     <h3>Sinopsis</h3>
