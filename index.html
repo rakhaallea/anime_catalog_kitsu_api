@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Catalog - Jikan API</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>⛩️ Anime Explorer</h1>
+            <div class="search-filter-box">
+                <input type="text" id="searchInput" placeholder="Cari anime... (misal: Naruto, One Piece)">
+                <select id="typeSelect">
+                    <option value="">Semua Format</option>
+                    <option value="tv">TV Series</option>
+                    <option value="movie">Movie</option>
+                    <option value="ova">OVA</option>
+                </select>
+            </div>
+        </header>
+
+        <main id="animeContainer">
+            
+        </main>
+
+        <div class="pagination-container">
+            <button id="firstBtn" class="page-btn" disabled>&laquo; First</button>
+            <button id="prevBtn" class="page-btn" disabled>&lsaquo; Prev</button>
+
+            <div id="pageNumbers" class="page-numbers">
+            </div>
+
+            <button id="nextBtn" class="page-btn">Next &rsaquo;</button>
+            <button id="lastBtn" class="page-btn">Last &raquo;</button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
