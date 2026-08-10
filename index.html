@@ -12,7 +12,13 @@
     <div class="app-container">
         <header>
             <h1>⛩️ Anime Explorer</h1>
-            <div class="search-filter-box">
+
+            <div class="nav-tabs">
+                <button id="tabAllBtn" class="tab-btn active">🌐 Jelajah Anime</button>
+                <button id="tabBookmarkBtn" class="tab-btn">❤️ Favorit Saya (<span id="bookmarkCount">0</span>)</button>
+            </div>
+
+            <div id="filterSection" class="search-filter-box">
                 <input type="text" id="searchInput" placeholder="Cari anime... (misal: Naruto, One Piece)">
                 <select id="typeSelect">
                     <option value="">Semua Format</option>
@@ -24,7 +30,7 @@
         </header>
 
         <main id="animeContainer">
-            
+
         </main>
 
         <div class="pagination-container">
@@ -40,16 +46,17 @@
     </div>
 
     <div id="animeModal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <button id="closeModalBtn" class="modal-close-btn">&times;</button>
-        
-        <div id="modalBody" class="modal-body">
+        <div class="modal-content">
+            <button id="closeModalBtn" class="modal-close-btn">&times;</button>
 
+            <div id="modalBody" class="modal-body">
+
+            </div>
         </div>
     </div>
-</div>
 
     <script src="js/api.js"></script>
+    <script src="js/storage.js"></script>
     <script src="js/app.js"></script>
 </body>
 

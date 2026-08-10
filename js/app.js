@@ -6,6 +6,8 @@ let totalPages = 1;
 let currentQuery = "";
 let currentSubtype = "";
 let searchTimer = null;
+let currentView = 'all';
+let currentFetchedList = [];
 
 // DEKLARASI DOM ELEMENTS
 const animeContainer = document.getElementById("animeContainer");
@@ -21,6 +23,11 @@ const pageNumbersContainer = document.getElementById("pageNumbers");
 const animeModal = document.getElementById('animeModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const modalBody = document.getElementById('modalBody');
+
+const tabAllBtn = document.getElementById('tabAllBtn');
+const tabBookmarkBtn = document.getElementById('tabBookmarkBtn');
+const filterSection = document.getElementById('filterSection');
+const paginationContainer = document.querySelector('.pagination-container');
 
 // LOGIKA DYNAMIC SLIDING WINDOW PAGINATION
 function renderPageNumbers() {
@@ -82,7 +89,10 @@ function showLoading() {
 
 function renderAnime(animeList) {
     if (!animeList || animeList.length === 0) {
-        animeContainer.innerHTML = `<div class="empty">Anime tidak ditemukan.</div>`;
+        const msg = currentView === "bookmark"
+            ? 'Belum ada anime favorit yang disimpan.'
+            : 'Anime tidak ditemukan.'
+        animeContainer.innerHTML = `<div class="empty">${msg}</div>`;
         return;
     }
 
@@ -97,8 +107,14 @@ function renderAnime(animeList) {
             ? (attr.averageRating / 10).toFixed(1)
             : "N/A";
 
+        const bookmarked = isBookmarked(item.id);
+
         return `
             <div class="anime-card" data-id="${item.id}">
+            <button class="bookmark-card-btn ${bookmarked ? 'active' : ''}" data-id="${item.id}" title="Simpan Favorit">
+                ${bookmarked ? '❤️' : '🤍'}
+            </button>
+
             <img src="${posterUrl}" alt="${attr.canonicalTitle}" loading="lazy">
             <div class="anime-info">
                 <span class="badge">${attr.subtype || "N/A"}</span>
@@ -108,7 +124,27 @@ function renderAnime(animeList) {
             </div>
             </div>
         `;
-        }).join('');
+    }).join('');
+}
+
+function switchView(view) {
+    currentView = view;
+
+    if (view === 'all') {
+        tabAllBtn.classList.add('active');
+        tabBookmarkBtn.classList.remove('active');
+        filterSection.style.display = 'flex';
+        paginationContainer.style.display = 'flex';
+        loadAnimeData();
+    } else if (view === 'bookmark') {
+        tabBookmarkBtn.classList.add('active');
+        tabAllBtn.classList.remove('active');
+        filterSection.style.display = 'none';
+        paginationContainer.style.display = 'none';
+
+        const bookmarks = getBookmarks();
+        renderAnime(bookmarks);
+    }
 }
 
 async function openAnimeModal(animeId) {
@@ -123,46 +159,70 @@ async function openAnimeModal(animeId) {
         const score = attr.averageRating ? (attr.averageRating / 10).toFixed(1) : 'N/A';
         const youtubeId = attr.youtubeVideoId;
 
-        modalBody.innerHTML = `
-            <div class="modal-grid">
-                <div class="modal-poster">
-                    <img src="${posterUrl}" alt="${attr.canonicalTitle}">
-                </div>
-                
-                <div class="modal-details">
-                    <h2>${attr.canonicalTitle}</h2>
-                    
-                    <div class="modal-meta">
-                        <span class="badge">${attr.subtype || 'N/A'}</span>
-                        <span class="badge score">⭐ ${score}</span>
-                        <span class="badge" style="background-color: #10b981;">${attr.status || 'N/A'}</span>
-                    </div>
-                    
-                    <p><strong>Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
-                    <p><strong>Rilis:</strong> ${attr.startDate || 'N/A'}</p>
-                    
-                    <br>
-                    <h3>Sinopsis</h3>
-                    <p class="modal-synopsis">
-                        ${attr.synopsis || 'Sinopsis tidak tersedia.'}
-                    </p>
-                </div>
-            </div>
+        const bookmarked = isBookmarked(anime.id);
 
-            ${
-                youtubeId ? `
-                <h3>Trailer Resmi</h3>
-                    <div class="trailer-container">
-                        <iframe 
-                            src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
-                            title="YouTube video player" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
-                    </div>
-                ` : `<p><em>Trailer tidak tersedia untuk anime ini.</em></p>`
-            }
-        `
+        modalBody.innerHTML = `
+        <div class="modal-grid">
+            <div class="modal-poster">
+            <img src="${posterUrl}" alt="${attr.canonicalTitle}">
+            </div>
+            <div class="modal-details">
+            <h2>${attr.canonicalTitle}</h2>
+            <div class="modal-meta">
+                <span class="badge">${attr.subtype || 'N/A'}</span>
+                <span class="badge score">⭐ ${score}</span>
+                <span class="badge" style="background-color: #10b981;">${attr.status || 'N/A'}</span>
+            </div>
+            <p><strong>Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
+            <p><strong>Rilis:</strong> ${attr.startDate || 'N/A'}</p>
+
+            <button id="modalBookmarkBtn" class="modal-bookmark-btn ${bookmarked ? 'active' : ''}">
+                <span class="icon">${bookmarked ? '❤️' : '🤍'}</span>
+                <span class="text">${bookmarked ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
+            </button>
+
+            <br><br>
+            <h3>Sinopsis</h3>
+            <p class="modal-synopsis">${attr.synopsis || 'Sinopsis tidak tersedia.'}</p>
+            </div>
+        </div>
+
+        ${youtubeId ? `
+            <h3>Trailer Resmi</h3>
+            <div class="trailer-container">
+            <iframe 
+                src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
+                title="YouTube video player" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            </div>
+        ` : '<p><em>Trailer tidak tersedia untuk anime ini.</em></p>'}
+        `;
+
+        const modalBookmarkBtn = document.getElementById('modalBookmarkBtn');
+        if (modalBookmarkBtn) {
+            modalBookmarkBtn.addEventListener('click', () => {
+                const added = toggleBookmark(anime); // Panggil fungsi toggle
+
+                // Update tampilan tombol secara langsung di modal
+                modalBookmarkBtn.classList.toggle('active', added);
+                modalBookmarkBtn.querySelector('.icon').textContent = added ? '❤️' : '🤍';
+                modalBookmarkBtn.querySelector('.text').textContent = added ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+
+                // Sinkronkan juga tampilan ikon bookmark di kartu utama (jika ada)
+                const cardBookmarkBtn = animeContainer.querySelector(`.bookmark-card-btn[data-id="${anime.id}"]`);
+                if (cardBookmarkBtn) {
+                    cardBookmarkBtn.classList.toggle('active', added);
+                    cardBookmarkBtn.textContent = added ? '❤️' : '🤍';
+                }
+
+                // Jika user sedang di Tab Bookmark, refresh tampilan grid
+                if (currentView === 'bookmark') {
+                    renderAnime(getBookmarks());
+                }
+            });
+        }
     } catch (error) {
         modalBody.innerHTML = `<div class="error-msg">${error.message}</div>`;
         console.error(error)
@@ -170,13 +230,15 @@ async function openAnimeModal(animeId) {
 }
 
 // MAIN CONTROLLER
-async function loadAnimeData(){
+async function loadAnimeData() {
     showLoading();
 
     try {
         const result = await fetchAnimeFromKitsu(currentQuery, currentSubtype, currentPage, itemsPerPage);
 
-        if(result.totalCount){
+        currentFetchedList = result.data || [];
+
+        if (result.totalCount) {
             totalPages = Math.ceil(result.totalCount / itemsPerPage);
         } else {
             totalPages = 1;
@@ -185,7 +247,7 @@ async function loadAnimeData(){
         renderAnime(result.data);
         updatePaginationUI();
     } catch (error) {
-        if(animeContainer) {
+        if (animeContainer) {
             animeContainer.innerHTML = `<div class="error-msg">${error.message}</div>`;
             throw error;
         }
@@ -198,7 +260,7 @@ function closeModal() {
 }
 
 // EVENT LISTENERS INTERAKSI USER
-if(searchInput) {
+if (searchInput) {
     searchInput.addEventListener("input", debounce((e) => {
         currentQuery = e.target.value.trim();
         curentPage = 1;
@@ -206,7 +268,7 @@ if(searchInput) {
     }, 500));
 }
 
-if(typeSelect) {
+if (typeSelect) {
     typeSelect.addEventListener("change", (e) => {
         currentSubtype = e.target.value;
         currentPage = 1;
@@ -215,7 +277,7 @@ if(typeSelect) {
 }
 
 firstBtn.addEventListener("click", () => {
-    if(currentPage > 1) {
+    if (currentPage > 1) {
         currentPage = 1;
         loadAnimeData();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -223,7 +285,7 @@ firstBtn.addEventListener("click", () => {
 })
 
 prevBtn.addEventListener("click", () => {
-    if(currentPage > 1) {
+    if (currentPage > 1) {
         currentPage--;
         loadAnimeData();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -231,7 +293,7 @@ prevBtn.addEventListener("click", () => {
 })
 
 nextBtn.addEventListener("click", () => {
-    if(currentPage < totalPages) {
+    if (currentPage < totalPages) {
         currentPage++;
         loadAnimeData();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -239,7 +301,7 @@ nextBtn.addEventListener("click", () => {
 })
 
 lastBtn.addEventListener("click", () => {
-    if(currentPage < totalPages) {
+    if (currentPage < totalPages) {
         currentPage = totalPages;
         loadAnimeData();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -247,25 +309,56 @@ lastBtn.addEventListener("click", () => {
 })
 
 animeContainer.addEventListener('click', (e) => {
+    const bookmarkBtn = e.target.closest('.bookmark-card-btn');
+
+    if (bookmarkBtn) {
+        e.stopPropagation();
+        const card = bookmarkBtn.closest('.anime-card');
+        const animeId = bookmarkBtn.dataset.id;
+
+        const animeObj = currentView === "bookmark"
+            ? getBookmarks().find(item => String(item.id) === String(animeId))
+            : currentFetchedList.find(item => String(item.id) === String(animeId));
+
+        if (animeObj) {
+            toggleBookmark(animeObj);
+
+            if (currentView === "bookmark") {
+                renderAnime(getBookmarks());
+            } else {
+                const isNowBookmarked = isBookmarked(animeId);
+                bookmarkBtn.classList.toggle('active', isNowBookmarked);
+                bookmarkBtn.textContent = isNowBookmarked ? '❤️' : '🤍';
+            }
+        }
+        return;
+    }
+
     const card = e.target.closest('.anime-card');
-    if(card) {
+    if (card) {
         const animeId = card.dataset.id;
         openAnimeModal(animeId);
     }
 });
 
+tabAllBtn.addEventListener('click', () => switchView('all'));
+tabBookmarkBtn.addEventListener('click', () => switchView('bookmark'));
+
 closeModalBtn.addEventListener('click', closeModal);
 
 animeModal.addEventListener('click', (e) => {
-    if(e.target === animeModal){
+    if (e.target === animeModal) {
         closeModal();
     }
 });
 
 document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && !animeModal.classList.contains('hidden')) {
+    if (e.key === 'Escape' && !animeModal.classList.contains('hidden')) {
         closeModal();
     };
 })
 
-document.addEventListener("DOMContentLoaded", loadAnimeData);
+document.addEventListener('DOMContentLoaded', () => {
+    updateBookmarkCountUI();
+    loadAnimeData();
+});

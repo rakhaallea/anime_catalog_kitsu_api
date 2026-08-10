@@ -59,6 +59,92 @@ header h1 {
     -webkit-text-fill-color: transparent;
 }
 
+/* NAV TABS & BOOKMARK STYLING */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    background: var(--bg-input);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: .6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-btn:hover {
+    color: var(--text-main);
+    border-color: var(--accent-color);
+}
+
+.tab-btn.active {
+    background: var(--accent-color);
+    color: #FFF;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+}
+
+/* Tombol Bookmark pada Kartu Anime */
+.bookmark-card-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--border-color);
+    color: #f8fafc;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    z-index: 10;
+    transition: var(--transition);
+}
+
+.bookmark-card-btn:hover {
+    transform: scale(1.15);
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+}
+
+.bookmark-card-btn.active {
+    color: #ef4444;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.25);
+}
+
+/* Tombol Bookmark di Modal */
+.modal-bookmark-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: var(--transition);
+}
+
+.modal-bookmark-btn:hover,
+.modal-bookmark-btn.active {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
 .search-filter-box {
     display: flex;
     justify-content: center;
