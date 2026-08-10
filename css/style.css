@@ -444,6 +444,128 @@ select:focus {
     border: 0;
 }
 
+/* 1. SKELETON SCREEN LOADING STYLING */
+.skeleton-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+}
+
+.skeleton-img {
+    width: 100%;
+    height: 280px;
+    background: #1e293b;
+}
+
+.skeleton-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    flex-grow: 1;
+}
+
+.skeleton-title {
+    width: 80%;
+    height: 16px;
+    background: #1e293b;
+    border-radius: 4px;
+}
+
+.skeleton-text {
+    width: 40%;
+    height: 12px;
+    background: #1e293b;
+    border-radius: 4px;
+}
+
+.shimmer {
+    background: linear-gradient(90deg,
+            rgba(30, 41, 59, 0.6) 0%,
+            rgba(51, 65, 85, 0.8) 50%,
+            rgba(30, 41, 59, 0.6) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* 2. TOAST NOTIFICATION STYLING */
+.toast-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-color);
+    padding: .8rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: .9rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    pointer-events: auto;
+    animation: slideIn 0.3s ease-out forwards, fadeOut 0.3s ease-in forwards 2.7s;
+}
+
+.toast.success {
+    border-left-color: #10b981;
+}
+
+.toast.info {
+    border-left-color: #3b82f6;
+}
+
+.toast.error {
+    border-left-color: #ef4444;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 @media (max-width: 650px) {
     .modal-grid {
         grid-template-columns: 1fr;

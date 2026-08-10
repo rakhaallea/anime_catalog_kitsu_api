@@ -29,6 +29,8 @@ const tabBookmarkBtn = document.getElementById('tabBookmarkBtn');
 const filterSection = document.getElementById('filterSection');
 const paginationContainer = document.querySelector('.pagination-container');
 
+const toastContainer = document.getElementById('toastContainer');
+
 // LOGIKA DYNAMIC SLIDING WINDOW PAGINATION
 function renderPageNumbers() {
     pageNumbersContainer.innerHTML = "";
@@ -79,12 +81,6 @@ function debounce(func, delay = 500) {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => func.apply(this, args), delay);
     };
-}
-
-function showLoading() {
-    if (animeContainer) {
-        animeContainer.innerHTML = `<div class="loading">Memuat data anime...</div>`;
-    }
 }
 
 function renderAnime(animeList) {
@@ -145,6 +141,38 @@ function switchView(view) {
         const bookmarks = getBookmarks();
         renderAnime(bookmarks);
     }
+}
+
+function showToast(message, type = "info"){
+    if(!toastContainer) return;
+
+    const toast = document.createElement('div');
+    toast.className =  `toast ${type}`;
+
+    const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+function showLoading() {
+    if(!animeContainer) return;
+
+    const skeletonCards = Array(8).fill(0).map(() => `
+        <div class="skeleton-card">
+            <div class="skeleton-img shimmer"></div>
+            <div class="skeleton-body">
+                <div class="skeleton-title shimmer"></div>
+                <div class="skeleton-text shimmer"></div>
+            </div>
+        </div>
+    `).join('');
+
+    animeContainer.innerHTML = skeletonCards;
 }
 
 async function openAnimeModal(animeId) {
@@ -321,7 +349,7 @@ animeContainer.addEventListener('click', (e) => {
             : currentFetchedList.find(item => String(item.id) === String(animeId));
 
         if (animeObj) {
-            toggleBookmark(animeObj);
+            const isAdded = toggleBookmark(animeObj);
 
             if (currentView === "bookmark") {
                 renderAnime(getBookmarks());
@@ -330,6 +358,12 @@ animeContainer.addEventListener('click', (e) => {
                 bookmarkBtn.classList.toggle('active', isNowBookmarked);
                 bookmarkBtn.textContent = isNowBookmarked ? '❤️' : '🤍';
             }
+
+            const title = animeObj.attributes?.canonicalTitle || 'Anime';
+            showToast(
+                isAdded ? `"${title}" ditambahkan ke Favorit!` : `"${title}" dihapus dari Favorit.`,
+                isAdded ? 'success' : 'info'
+            )
         }
         return;
     }
