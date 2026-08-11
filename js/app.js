@@ -9,6 +9,8 @@ let searchTimer = null;
 let currentView = 'all';
 let currentFetchedList = [];
 
+let isProcessingBookmark = false;
+
 // DEKLARASI DOM ELEMENTS
 const animeContainer = document.getElementById("animeContainer");
 const searchInput = document.getElementById("searchInput");
@@ -145,6 +147,8 @@ function switchView(view) {
 
 function showToast(message, type = "info"){
     if(!toastContainer) return;
+
+    toastContainer.innerHTML = '';
 
     const toast = document.createElement('div');
     toast.className =  `toast ${type}`;
@@ -341,6 +345,10 @@ animeContainer.addEventListener('click', (e) => {
 
     if (bookmarkBtn) {
         e.stopPropagation();
+
+        if (isProcessingBookmark) return;
+        isProcessingBookmark = true;
+
         const card = bookmarkBtn.closest('.anime-card');
         const animeId = bookmarkBtn.dataset.id;
 
@@ -365,6 +373,11 @@ animeContainer.addEventListener('click', (e) => {
                 isAdded ? 'success' : 'info'
             )
         }
+
+        setTimeout(() => {
+            isProcessingBookmark = false;
+        }, 300);
+        ``
         return;
     }
 
