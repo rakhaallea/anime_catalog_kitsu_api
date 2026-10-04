@@ -35,3 +35,24 @@ function updateBookmarkCountUI() {
         countEl.textContent = bookmarks.length;
     }
 }
+
+// STORAGE USER PROFILE (REGISTRASI & AUTH)
+const USER_PROFILE_KEY = 'user_profile';
+
+function getUserProfile() {
+    const data = localStorage.getItem(USER_PROFILE_KEY);
+    try {
+        return data ? JSON.parse(data) : null;
+    } catch (e) {
+        console.error('Error parsing user profile:', e);
+        return null;
+    }
+}
+
+function saveUserProfile(profile) {
+    localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+}
+
+function clearUserProfile() {
+    localStorage.removeItem(USER_PROFILE_KEY);
+}

@@ -1,5 +1,4 @@
 // DEKLARASI GLOBAL STATE (MEMORI APLIKASI)
-
 let currentPage = 1;
 const itemsPerPage = 20;
 let totalPages = 1;
@@ -145,13 +144,13 @@ function switchView(view) {
     }
 }
 
-function showToast(message, type = "info"){
-    if(!toastContainer) return;
+function showToast(message, type = "info") {
+    if (!toastContainer) return;
 
     toastContainer.innerHTML = '';
 
     const toast = document.createElement('div');
-    toast.className =  `toast ${type}`;
+    toast.className = `toast ${type}`;
 
     const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
     toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
@@ -164,7 +163,7 @@ function showToast(message, type = "info"){
 }
 
 function showLoading() {
-    if(!animeContainer) return;
+    if (!animeContainer) return;
 
     const skeletonCards = Array(8).fill(0).map(() => `
         <div class="skeleton-card">
@@ -295,7 +294,7 @@ function closeModal() {
 if (searchInput) {
     searchInput.addEventListener("input", debounce((e) => {
         currentQuery = e.target.value.trim();
-        curentPage = 1;
+        currentPage = 1;
         loadAnimeData();
     }, 500));
 }
@@ -377,7 +376,7 @@ animeContainer.addEventListener('click', (e) => {
         setTimeout(() => {
             isProcessingBookmark = false;
         }, 300);
-        ``
+
         return;
     }
 
@@ -407,5 +406,9 @@ document.addEventListener('keydown', (e) => {
 
 document.addEventListener('DOMContentLoaded', () => {
     updateBookmarkCountUI();
+    if (typeof initAuth === 'function') {
+        initAuth();
+    }
     loadAnimeData();
 });
+
