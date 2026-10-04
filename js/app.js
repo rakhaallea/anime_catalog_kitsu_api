@@ -87,8 +87,8 @@ function debounce(func, delay = 500) {
 function renderAnime(animeList) {
     if (!animeList || animeList.length === 0) {
         const msg = currentView === "bookmark"
-            ? 'Belum ada anime favorit yang disimpan.'
-            : 'Anime tidak ditemukan.'
+            ? '<i class="fa-regular fa-heart"></i> Belum ada anime favorit yang disimpan.'
+            : '<i class="fa-solid fa-magnifying-glass"></i> Anime tidak ditemukan.'
         animeContainer.innerHTML = `<div class="empty">${msg}</div>`;
         return;
     }
@@ -108,17 +108,21 @@ function renderAnime(animeList) {
 
         return `
             <div class="anime-card" data-id="${item.id}">
-            <button class="bookmark-card-btn ${bookmarked ? 'active' : ''}" data-id="${item.id}" title="Simpan Favorit">
-                ${bookmarked ? '❤️' : '🤍'}
-            </button>
+                <button class="bookmark-card-btn ${bookmarked ? 'active' : ''}" data-id="${item.id}" title="Simpan Favorit">
+                    <i class="fa-${bookmarked ? 'solid' : 'regular'} fa-heart"></i>
+                </button>
 
-            <img src="${posterUrl}" alt="${attr.canonicalTitle}" loading="lazy">
-            <div class="anime-info">
-                <span class="badge">${attr.subtype || "N/A"}</span>
-                <span class="score">⭐ ${score}</span>
-                <h3>${attr.canonicalTitle}</h3>
-                <p class="episodes">${attr.episodeCount ? attr.episodeCount + " Ep" : "On Going"}</p>
-            </div>
+                <div class="card-poster-box">
+                    <img src="${posterUrl}" alt="${attr.canonicalTitle}" loading="lazy">
+                    <span class="badge"><i class="fa-solid fa-tv"></i> ${attr.subtype || "N/A"}</span>
+                </div>
+                <div class="anime-info">
+                    <div class="meta-row">
+                        <span class="score"><i class="fa-solid fa-star"></i> ${score}</span>
+                        <span class="episodes"><i class="fa-solid fa-film"></i> ${attr.episodeCount ? attr.episodeCount + " Ep" : "Ongoing"}</span>
+                    </div>
+                    <h3>${attr.canonicalTitle}</h3>
+                </div>
             </div>
         `;
     }).join('');
@@ -152,8 +156,13 @@ function showToast(message, type = "info") {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
 
-    const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
-    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    const icon = type === 'success'
+        ? '<i class="fa-solid fa-circle-check"></i>'
+        : type === 'error'
+            ? '<i class="fa-solid fa-triangle-exclamation"></i>'
+            : '<i class="fa-solid fa-circle-info"></i>';
+
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> <span class="toast-text">${message}</span>`;
 
     toastContainer.appendChild(toast);
 
@@ -168,15 +177,12 @@ function showLoading() {
     const skeletonCards = Array(8).fill(0).map(() => `
         <div class="skeleton-card">
             <div class="skeleton-img shimmer"></div>
-            <div class="skeleton-body">
-                <div class="skeleton-title shimmer"></div>
-                <div class="skeleton-text shimmer"></div>
-            </div>
         </div>
     `).join('');
 
     animeContainer.innerHTML = skeletonCards;
 }
+
 
 async function openAnimeModal(animeId) {
     modalBody.innerHTML = `<div class="loading">Memuat detail anime...</div>`;
@@ -195,60 +201,62 @@ async function openAnimeModal(animeId) {
         modalBody.innerHTML = `
         <div class="modal-grid">
             <div class="modal-poster">
-            <img src="${posterUrl}" alt="${attr.canonicalTitle}">
+                <img src="${posterUrl}" alt="${attr.canonicalTitle}">
             </div>
             <div class="modal-details">
-            <h2>${attr.canonicalTitle}</h2>
-            <div class="modal-meta">
-                <span class="badge">${attr.subtype || 'N/A'}</span>
-                <span class="badge score">⭐ ${score}</span>
-                <span class="badge" style="background-color: #10b981;">${attr.status || 'N/A'}</span>
-            </div>
-            <p><strong>Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
-            <p><strong>Rilis:</strong> ${attr.startDate || 'N/A'}</p>
+                <h2>${attr.canonicalTitle}</h2>
+                <div class="modal-meta">
+                    <span class="badge"><i class="fa-solid fa-tv"></i> ${attr.subtype || 'N/A'}</span>
+                    <span class="badge score"><i class="fa-solid fa-star"></i> ${score}</span>
+                    <span class="badge status"><i class="fa-solid fa-circle-dot"></i> ${attr.status || 'N/A'}</span>
+                </div>
+                <p><strong><i class="fa-solid fa-film"></i> Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
+                <p><strong><i class="fa-solid fa-calendar-days"></i> Rilis:</strong> ${attr.startDate || 'N/A'}</p>
 
-            <button id="modalBookmarkBtn" class="modal-bookmark-btn ${bookmarked ? 'active' : ''}">
-                <span class="icon">${bookmarked ? '❤️' : '🤍'}</span>
-                <span class="text">${bookmarked ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
-            </button>
+                <button id="modalBookmarkBtn" class="modal-bookmark-btn ${bookmarked ? 'active' : ''}">
+                    <span class="icon"><i class="fa-${bookmarked ? 'solid' : 'regular'} fa-heart"></i></span>
+                    <span class="text">${bookmarked ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
+                </button>
 
-            <br><br>
-            <h3>Sinopsis</h3>
-            <p class="modal-synopsis">${attr.synopsis || 'Sinopsis tidak tersedia.'}</p>
+                <div class="modal-synopsis-section">
+                    <h3><i class="fa-solid fa-align-left"></i> Sinopsis</h3>
+                    <p class="modal-synopsis">${attr.synopsis || 'Sinopsis tidak tersedia.'}</p>
+                </div>
             </div>
         </div>
 
         ${youtubeId ? `
-            <h3>Trailer Resmi</h3>
-            <div class="trailer-container">
-            <iframe 
-                src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
-                title="YouTube video player" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
+            <div class="modal-trailer-box">
+                <h3><i class="fa-brands fa-youtube"></i> Trailer Resmi</h3>
+                <div class="trailer-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
+                        title="YouTube video player" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
             </div>
-        ` : '<p><em>Trailer tidak tersedia untuk anime ini.</em></p>'}
+        ` : '<p class="no-trailer"><i class="fa-solid fa-video-slash"></i> Trailer tidak tersedia untuk anime ini.</p>'}
         `;
 
         const modalBookmarkBtn = document.getElementById('modalBookmarkBtn');
         if (modalBookmarkBtn) {
             modalBookmarkBtn.addEventListener('click', () => {
-                const added = toggleBookmark(anime); // Panggil fungsi toggle
+                const added = toggleBookmark(anime);
 
-                // Update tampilan tombol secara langsung di modal
+                // Update modal button UI
                 modalBookmarkBtn.classList.toggle('active', added);
-                modalBookmarkBtn.querySelector('.icon').textContent = added ? '❤️' : '🤍';
+                modalBookmarkBtn.querySelector('.icon').innerHTML = added ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
                 modalBookmarkBtn.querySelector('.text').textContent = added ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
 
-                // Sinkronkan juga tampilan ikon bookmark di kartu utama (jika ada)
+                // Update card button UI in grid if present
                 const cardBookmarkBtn = animeContainer.querySelector(`.bookmark-card-btn[data-id="${anime.id}"]`);
                 if (cardBookmarkBtn) {
                     cardBookmarkBtn.classList.toggle('active', added);
-                    cardBookmarkBtn.textContent = added ? '❤️' : '🤍';
+                    cardBookmarkBtn.innerHTML = added ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
                 }
 
-                // Jika user sedang di Tab Bookmark, refresh tampilan grid
                 if (currentView === 'bookmark') {
                     renderAnime(getBookmarks());
                 }
@@ -363,7 +371,7 @@ animeContainer.addEventListener('click', (e) => {
             } else {
                 const isNowBookmarked = isBookmarked(animeId);
                 bookmarkBtn.classList.toggle('active', isNowBookmarked);
-                bookmarkBtn.textContent = isNowBookmarked ? '❤️' : '🤍';
+                bookmarkBtn.innerHTML = isNowBookmarked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
             }
 
             const title = animeObj.attributes?.canonicalTitle || 'Anime';

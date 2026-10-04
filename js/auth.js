@@ -202,8 +202,9 @@ function validateAndRegister(e) {
 
     // C. Toast Notification Sukses
     if (typeof showToast === 'function') {
-        showToast(`🎉 Welcome aboard, ${newProfile.username}! Your Otaku ID has been created.`, 'success');
+        showToast(`Welcome aboard, ${newProfile.username}! Your Otaku ID has been created.`, 'success');
     }
+
 
     // D. Manipulasi Navbar DOM secara instan (SPA)
     updateAuthUI(newProfile);

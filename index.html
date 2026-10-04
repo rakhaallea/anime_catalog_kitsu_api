@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anime Catalog - Kitsu API</title>
+
+    <!-- Google Fonts: Nunito & Quicksand (Design System) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -13,39 +23,48 @@
         <header>
             <div class="auth-bar">
                 <div class="auth-brand">
-                    <span class="badge-edition">UTS Front-End Edition</span>
+                    <span class="badge-edition"><i class="fa-solid fa-shapes"></i> 3D Clay &amp; Neo-Brutalist</span>
                 </div>
                 <div id="authNavContainer" class="auth-nav">
-                    <button id="openRegisterBtn" class="register-nav-btn">✨ Join Explorer</button>
+                    <button id="openRegisterBtn" class="register-nav-btn"><i class="fa-solid fa-user-plus"></i> Join Explorer</button>
                     <div id="userBadgeContainer" class="user-badge-container hidden">
                         <div class="user-info-chip" id="openProfileBtn" title="Klik untuk lihat Otaku Pass">
                             <div class="user-avatar" id="navAvatar">U</div>
                             <div class="user-details">
                                 <span class="user-greeting">Hi, <strong id="navUsername">User</strong>!</span>
-                                <span class="user-role">Otaku Explorer</span>
+                                <span class="user-role"><i class="fa-solid fa-shield-halved"></i> Otaku Explorer</span>
                             </div>
                         </div>
-                        <button id="viewPassBtn" class="action-btn pass-btn" title="Buka Kartu Anggota">🪪 Otaku Pass</button>
-                        <button id="logoutBtn" class="action-btn logout-btn" title="Keluar">🚪 Logout</button>
+                        <button id="viewPassBtn" class="action-btn pass-btn" title="Buka Kartu Anggota"><i class="fa-solid fa-id-card"></i> Otaku Pass</button>
+                        <button id="logoutBtn" class="action-btn logout-btn" title="Keluar"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
                     </div>
                 </div>
             </div>
 
-            <h1>⛩️ Anime Explorer</h1>
+            <div class="header-hero">
+                <h1 class="main-title"><i class="fa-solid fa-torii-gate"></i> Anime Explorer</h1>
+                <p class="hero-tagline">Temukan dan jelajahi ribuan anime favoritmu dengan gaya retro-interaktif!</p>
+            </div>
 
             <div class="nav-tabs">
-                <button id="tabAllBtn" class="tab-btn active">🌐 Jelajah Anime</button>
-                <button id="tabBookmarkBtn" class="tab-btn">❤️ Favorit Saya (<span id="bookmarkCount">0</span>)</button>
+                <button id="tabAllBtn" class="tab-btn active"><i class="fa-solid fa-compass"></i> Jelajah Anime</button>
+                <button id="tabBookmarkBtn" class="tab-btn"><i class="fa-solid fa-heart"></i> Favorit Saya (<span id="bookmarkCount">0</span>)</button>
             </div>
 
             <div id="filterSection" class="search-filter-box">
-                <input type="text" id="searchInput" placeholder="Cari anime... (misal: Naruto, One Piece)">
-                <select id="typeSelect">
-                    <option value="">Semua Format</option>
-                    <option value="tv">TV Series</option>
-                    <option value="movie">Movie</option>
-                    <option value="ova">OVA</option>
-                </select>
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Cari anime... (misal: Naruto, One Piece)">
+                </div>
+                <div class="select-wrapper">
+                    <select id="typeSelect">
+                        <option value="">Semua Format</option>
+                        <option value="tv">TV Series</option>
+                        <option value="movie">Movie</option>
+                        <option value="ova">OVA</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
             </div>
         </header>
 
@@ -54,21 +73,21 @@
         </main>
 
         <div class="pagination-container">
-            <button id="firstBtn" class="page-btn" disabled>&laquo; First</button>
-            <button id="prevBtn" class="page-btn" disabled>&lsaquo; Prev</button>
+            <button id="firstBtn" class="page-btn" disabled><i class="fa-solid fa-angles-left"></i> First</button>
+            <button id="prevBtn" class="page-btn" disabled><i class="fa-solid fa-angle-left"></i> Prev</button>
 
             <div id="pageNumbers" class="page-numbers">
             </div>
 
-            <button id="nextBtn" class="page-btn">Next &rsaquo;</button>
-            <button id="lastBtn" class="page-btn">Last &raquo;</button>
+            <button id="nextBtn" class="page-btn">Next <i class="fa-solid fa-angle-right"></i></button>
+            <button id="lastBtn" class="page-btn">Last <i class="fa-solid fa-angles-right"></i></button>
         </div>
     </div>
 
     <!-- MODAL DETAIL ANIME -->
     <div id="animeModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+        <div class="modal-content modal-detail">
+            <button id="closeModalBtn" class="modal-close-btn" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
 
             <div id="modalBody" class="modal-body">
 
@@ -79,9 +98,9 @@
     <!-- MODAL REGISTRASI PENGGUNA -->
     <div id="registerModal" class="modal-overlay hidden">
         <div class="modal-content modal-auth">
-            <button id="closeRegisterBtn" class="modal-close-btn">&times;</button>
+            <button id="closeRegisterBtn" class="modal-close-btn" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
             <div class="auth-header">
-                <h2>⛩️ Join Otaku Explorer</h2>
+                <h2><i class="fa-solid fa-user-plus"></i> Join Otaku Explorer</h2>
                 <p>Daftarkan akunmu untuk membuka Otaku Member Pass resmi!</p>
             </div>
 
@@ -102,12 +121,12 @@
                     <label for="regGenre">Genre Anime Favorit <span class="required">*</span></label>
                     <select id="regGenre">
                         <option value="">-- Pilih Genre Favorit --</option>
-                        <option value="Action & Shounen">🔥 Action & Shounen</option>
-                        <option value="Romance & Slice of Life">🌸 Romance & Slice of Life</option>
-                        <option value="Fantasy & Isekai">🧙‍♂️ Fantasy & Isekai</option>
-                        <option value="Mystery & Psychological">🕵️ Mystery & Psychological</option>
-                        <option value="Sci-Fi & Mecha">🚀 Sci-Fi & Mecha</option>
-                        <option value="Comedy & School">🎒 Comedy & School</option>
+                        <option value="Action & Shounen">Action & Shounen</option>
+                        <option value="Romance & Slice of Life">Romance & Slice of Life</option>
+                        <option value="Fantasy & Isekai">Fantasy & Isekai</option>
+                        <option value="Mystery & Psychological">Mystery & Psychological</option>
+                        <option value="Sci-Fi & Mecha">Sci-Fi & Mecha</option>
+                        <option value="Comedy & School">Comedy & School</option>
                     </select>
                     <small class="field-error" id="errorGenre"></small>
                 </div>
@@ -125,7 +144,7 @@
                 </div>
 
                 <button type="submit" id="submitRegisterBtn" class="submit-auth-btn">
-                    <span>🚀 Join / Register</span>
+                    <span><i class="fa-solid fa-rocket"></i> Join / Register</span>
                 </button>
             </form>
         </div>
@@ -134,14 +153,13 @@
     <!-- MODAL VIRTUAL MEMBER CARD (OTAKU PASS) -->
     <div id="otakuPassModal" class="modal-overlay hidden">
         <div class="modal-content modal-pass">
-            <button id="closePassBtn" class="modal-close-btn">&times;</button>
+            <button id="closePassBtn" class="modal-close-btn" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
             <div class="pass-wrapper">
                 <div class="otaku-card">
-                    <div class="card-glow"></div>
                     <div class="card-header">
-                        <div class="card-logo">⛩️ ANIME EXPLORER</div>
+                        <div class="card-logo"><i class="fa-solid fa-torii-gate"></i> ANIME EXPLORER</div>
                         <div class="card-chip"></div>
-                        <span class="card-rank">MEMBER PASS</span>
+                        <span class="card-rank"><i class="fa-solid fa-star"></i> MEMBER PASS</span>
                     </div>
                     <div class="card-body">
                         <div class="card-avatar-box">
@@ -150,7 +168,7 @@
                         </div>
                         <div class="card-meta">
                             <h3 id="passUsername">Username</h3>
-                            <p class="pass-role">Otaku Explorer (Member)</p>
+                            <p class="pass-role"><i class="fa-solid fa-shield-halved"></i> Otaku Explorer (Member)</p>
                             <div class="pass-info-grid">
                                 <div>
                                     <span class="info-label">FAVORITE GENRE</span>
@@ -174,7 +192,7 @@
                     </div>
                 </div>
             </div>
-            <p class="pass-hint">💡 Kartu ini tersimpan di browser Anda sebagai tanda pengenal resmi penjelajah anime.</p>
+            <p class="pass-hint"><i class="fa-solid fa-lightbulb"></i> Kartu ini tersimpan di browser Anda sebagai tanda pengenal resmi penjelajah anime.</p>
         </div>
     </div>
 
