@@ -31,6 +31,7 @@ const filterSection = document.getElementById('filterSection');
 const paginationContainer = document.querySelector('.pagination-container');
 
 const toastContainer = document.getElementById('toastContainer');
+const scrollTopBtn = document.getElementById('scrollTopBtn');
 
 // LOGIKA DYNAMIC SLIDING WINDOW PAGINATION
 function renderPageNumbers() {
@@ -418,5 +419,28 @@ document.addEventListener('DOMContentLoaded', () => {
         initAuth();
     }
     loadAnimeData();
+    handleScrollTopVisibility();
 });
+
+// SCROLL TO TOP CONTROLLER (TAMPIL JIKA SCROLL MELEBIHI 100VH)
+function handleScrollTopVisibility() {
+    if (!scrollTopBtn) return;
+    // window.innerHeight merepresentasikan ukuran 100vh pada layar
+    if (window.scrollY > window.innerHeight) {
+        scrollTopBtn.classList.add('show');
+    } else {
+        scrollTopBtn.classList.remove('show');
+    }
+}
+
+if (scrollTopBtn) {
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+window.addEventListener('scroll', handleScrollTopVisibility, { passive: true });
 
