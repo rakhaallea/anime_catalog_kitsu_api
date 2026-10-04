@@ -20,74 +20,90 @@
 
 <body>
     <div class="app-container">
+        <!-- HEADER LANDMARK -->
         <header>
             <div class="auth-bar">
                 <div class="auth-brand">
-                    <span class="badge-edition"><i class="fa-solid fa-shapes"></i> 3D Clay &amp; Neo-Brutalist</span>
+                    <span class="badge-edition"><i class="fa-solid fa-shapes" aria-hidden="true"></i> 3D Clay &amp; Neo-Brutalist</span>
                 </div>
-                <div id="authNavContainer" class="auth-nav">
-                    <button id="openRegisterBtn" class="register-nav-btn"><i class="fa-solid fa-user-plus"></i> Join Explorer</button>
+                <nav id="authNavContainer" class="auth-nav" aria-label="Menu Autentikasi Pengguna">
+                    <button id="openRegisterBtn" class="register-nav-btn"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> Join Explorer</button>
                     <div id="userBadgeContainer" class="user-badge-container hidden">
-                        <div class="user-info-chip" id="openProfileBtn" title="Klik untuk lihat Otaku Pass">
+                        <div class="user-info-chip" id="openProfileBtn" title="Klik untuk lihat Otaku Pass" role="button" tabindex="0">
                             <div class="user-avatar" id="navAvatar">U</div>
                             <div class="user-details">
                                 <span class="user-greeting">Hi, <strong id="navUsername">User</strong>!</span>
-                                <span class="user-role"><i class="fa-solid fa-shield-halved"></i> Otaku Explorer</span>
+                                <span class="user-role"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Otaku Explorer</span>
                             </div>
                         </div>
-                        <button id="viewPassBtn" class="action-btn pass-btn" title="Buka Kartu Anggota"><i class="fa-solid fa-id-card"></i> Otaku Pass</button>
-                        <button id="logoutBtn" class="action-btn logout-btn" title="Keluar"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+                        <button id="viewPassBtn" class="action-btn pass-btn" title="Buka Kartu Anggota"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Otaku Pass</button>
+                        <button id="logoutBtn" class="action-btn logout-btn" title="Keluar"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Logout</button>
                     </div>
-                </div>
+                </nav>
             </div>
 
             <div class="header-hero">
-                <h1 class="main-title"><i class="fa-solid fa-torii-gate"></i> Anime Explorer</h1>
+                <h1 class="main-title"><i class="fa-solid fa-torii-gate" aria-hidden="true"></i> Anime Explorer</h1>
                 <p class="hero-tagline">Temukan dan jelajahi ribuan anime favoritmu dengan gaya retro-interaktif!</p>
             </div>
 
-            <div class="nav-tabs">
-                <button id="tabAllBtn" class="tab-btn active"><i class="fa-solid fa-compass"></i> Jelajah Anime</button>
-                <button id="tabBookmarkBtn" class="tab-btn"><i class="fa-solid fa-heart"></i> Favorit Saya (<span id="bookmarkCount">0</span>)</button>
-            </div>
+            <!-- TAB NAVIGATION -->
+            <nav class="nav-tabs" aria-label="Kategori Penjelajahan Anime">
+                <button id="tabAllBtn" class="tab-btn active"><i class="fa-solid fa-compass" aria-hidden="true"></i> Jelajah Anime</button>
+                <button id="tabBookmarkBtn" class="tab-btn"><i class="fa-solid fa-heart" aria-hidden="true"></i> Favorit Saya (<span id="bookmarkCount">0</span>)</button>
+            </nav>
 
-            <div id="filterSection" class="search-filter-box">
+            <!-- SEARCH & FILTER FORM -->
+            <form id="filterSection" class="search-filter-box" role="search" aria-label="Pencarian dan filter anime" onsubmit="event.preventDefault();">
                 <div class="search-input-wrapper">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" id="searchInput" placeholder="Cari anime... (misal: Naruto, One Piece)">
+                    <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                    <label for="searchInput" class="sr-only">Cari anime</label>
+                    <input type="search" id="searchInput" placeholder="Cari anime... (misal: Naruto, One Piece)" autocomplete="off">
                 </div>
                 <div class="select-wrapper">
-                    <select id="typeSelect">
+                    <label for="typeSelect" class="sr-only">Pilih format anime</label>
+                    <select id="typeSelect" aria-label="Filter format anime">
                         <option value="">Semua Format</option>
                         <option value="tv">TV Series</option>
                         <option value="movie">Movie</option>
                         <option value="ova">OVA</option>
                     </select>
-                    <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    <i class="fa-solid fa-chevron-down select-arrow" aria-hidden="true"></i>
                 </div>
-            </div>
+            </form>
         </header>
 
+        <!-- MAIN CONTENT LANDMARK -->
         <main id="animeContainer">
 
         </main>
 
-        <div class="pagination-container">
-            <button id="firstBtn" class="page-btn" disabled><i class="fa-solid fa-angles-left"></i> First</button>
-            <button id="prevBtn" class="page-btn" disabled><i class="fa-solid fa-angle-left"></i> Prev</button>
+        <!-- PAGINATION NAVIGATION -->
+        <nav class="pagination-container" aria-label="Navigasi Halaman Katalog">
+            <button id="firstBtn" class="page-btn" disabled aria-label="Halaman Pertama"><i class="fa-solid fa-angles-left" aria-hidden="true"></i> First</button>
+            <button id="prevBtn" class="page-btn" disabled aria-label="Halaman Sebelumnya"><i class="fa-solid fa-angle-left" aria-hidden="true"></i> Prev</button>
 
-            <div id="pageNumbers" class="page-numbers">
+            <div id="pageNumbers" class="page-numbers" role="group" aria-label="Daftar Nomor Halaman">
             </div>
 
-            <button id="nextBtn" class="page-btn">Next <i class="fa-solid fa-angle-right"></i></button>
-            <button id="lastBtn" class="page-btn">Last <i class="fa-solid fa-angles-right"></i></button>
-        </div>
+            <button id="nextBtn" class="page-btn" aria-label="Halaman Selanjutnya">Next <i class="fa-solid fa-angle-right" aria-hidden="true"></i></button>
+            <button id="lastBtn" class="page-btn" aria-label="Halaman Terakhir">Last <i class="fa-solid fa-angles-right" aria-hidden="true"></i></button>
+        </nav>
+
+        <!-- FOOTER LANDMARK -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p class="footer-brand"><i class="fa-solid fa-torii-gate" aria-hidden="true"></i> <strong>Anime Explorer</strong> &bull; UTS Front-End Edition</p>
+                <p class="footer-meta">Data disediakan secara real-time oleh <a href="https://kitsu.io/api/edge" target="_blank" rel="noopener noreferrer">Kitsu REST API</a>.</p>
+                <p class="footer-copy">&copy; 2026 Dibangun dengan Vanilla JavaScript, 3D Claymorphic &amp; Neo-Brutalist Design.</p>
+            </div>
+        </footer>
     </div>
 
     <!-- MODAL DETAIL ANIME -->
-    <div id="animeModal" class="modal-overlay hidden">
+    <div id="animeModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalAnimeTitle">
         <div class="modal-content modal-detail">
-            <button id="closeModalBtn" class="modal-close-btn" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
+            <button id="closeModalBtn" class="modal-close-btn" title="Tutup" aria-label="Tutup detail anime"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
 
             <div id="modalBody" class="modal-body">
 
@@ -96,30 +112,30 @@
     </div>
 
     <!-- MODAL REGISTRASI PENGGUNA -->
-    <div id="registerModal" class="modal-overlay hidden">
+    <div id="registerModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="registerModalTitle">
         <div class="modal-content modal-auth">
-            <button id="closeRegisterBtn" class="modal-close-btn" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
+            <button id="closeRegisterBtn" class="modal-close-btn" title="Tutup" aria-label="Tutup formulir registrasi"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             <div class="auth-header">
-                <h2><i class="fa-solid fa-user-plus"></i> Join Otaku Explorer</h2>
+                <h2 id="registerModalTitle"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> Join Otaku Explorer</h2>
                 <p>Daftarkan akunmu untuk membuka Otaku Member Pass resmi!</p>
             </div>
 
             <form id="registerForm" novalidate>
                 <div class="form-group">
                     <label for="regUsername">Username <span class="required">*</span></label>
-                    <input type="text" id="regUsername" placeholder="Contoh: naruto_uzumaki" autocomplete="off">
-                    <small class="field-error" id="errorUsername"></small>
+                    <input type="text" id="regUsername" placeholder="Contoh: naruto_uzumaki" autocomplete="off" required>
+                    <small class="field-error" id="errorUsername" role="alert"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regEmail">Email <span class="required">*</span></label>
-                    <input type="email" id="regEmail" placeholder="nama@email.com" autocomplete="off">
-                    <small class="field-error" id="errorEmail"></small>
+                    <input type="email" id="regEmail" placeholder="nama@email.com" autocomplete="off" required>
+                    <small class="field-error" id="errorEmail" role="alert"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regGenre">Genre Anime Favorit <span class="required">*</span></label>
-                    <select id="regGenre">
+                    <select id="regGenre" required>
                         <option value="">-- Pilih Genre Favorit --</option>
                         <option value="Action & Shounen">Action & Shounen</option>
                         <option value="Romance & Slice of Life">Romance & Slice of Life</option>
@@ -128,47 +144,48 @@
                         <option value="Sci-Fi & Mecha">Sci-Fi & Mecha</option>
                         <option value="Comedy & School">Comedy & School</option>
                     </select>
-                    <small class="field-error" id="errorGenre"></small>
+                    <small class="field-error" id="errorGenre" role="alert"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regPassword">Password <span class="required">*</span></label>
-                    <input type="password" id="regPassword" placeholder="Minimal 8 karakter">
-                    <small class="field-error" id="errorPassword"></small>
+                    <input type="password" id="regPassword" placeholder="Minimal 8 karakter" required>
+                    <small class="field-error" id="errorPassword" role="alert"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regConfirmPassword">Konfirmasi Password <span class="required">*</span></label>
-                    <input type="password" id="regConfirmPassword" placeholder="Ulangi password di atas">
-                    <small class="field-error" id="errorConfirmPassword"></small>
+                    <input type="password" id="regConfirmPassword" placeholder="Ulangi password di atas" required>
+                    <small class="field-error" id="errorConfirmPassword" role="alert"></small>
                 </div>
 
                 <button type="submit" id="submitRegisterBtn" class="submit-auth-btn">
-                    <span><i class="fa-solid fa-rocket"></i> Join / Register</span>
+                    <span><i class="fa-solid fa-rocket" aria-hidden="true"></i> Join / Register</span>
                 </button>
             </form>
         </div>
     </div>
 
     <!-- MODAL VIRTUAL MEMBER CARD (OTAKU PASS) -->
-    <div id="otakuPassModal" class="modal-overlay hidden">
+    <div id="otakuPassModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="passModalTitle">
         <div class="modal-content modal-pass">
-            <button id="closePassBtn" class="modal-close-btn" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
+            <button id="closePassBtn" class="modal-close-btn" title="Tutup" aria-label="Tutup kartu anggota"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             <div class="pass-wrapper">
-                <div class="otaku-card">
+                <article class="otaku-card">
+                    <h2 id="passModalTitle" class="sr-only">Kartu Anggota Virtual Otaku Explorer</h2>
                     <div class="card-header">
-                        <div class="card-logo"><i class="fa-solid fa-torii-gate"></i> ANIME EXPLORER</div>
-                        <div class="card-chip"></div>
-                        <span class="card-rank"><i class="fa-solid fa-star"></i> MEMBER PASS</span>
+                        <div class="card-logo"><i class="fa-solid fa-torii-gate" aria-hidden="true"></i> ANIME EXPLORER</div>
+                        <div class="card-chip" aria-hidden="true"></div>
+                        <span class="card-rank"><i class="fa-solid fa-star" aria-hidden="true"></i> MEMBER PASS</span>
                     </div>
                     <div class="card-body">
                         <div class="card-avatar-box">
                             <div class="card-avatar" id="passAvatar">U</div>
-                            <span class="card-status-dot" title="Aktif"></span>
+                            <span class="card-status-dot" title="Aktif" aria-label="Status: Aktif"></span>
                         </div>
                         <div class="card-meta">
                             <h3 id="passUsername">Username</h3>
-                            <p class="pass-role"><i class="fa-solid fa-shield-halved"></i> Otaku Explorer (Member)</p>
+                            <p class="pass-role"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Otaku Explorer (Member)</p>
                             <div class="pass-info-grid">
                                 <div>
                                     <span class="info-label">FAVORITE GENRE</span>
@@ -186,22 +203,23 @@
                             <span class="info-label">MEMBER ID</span>
                             <span class="card-id" id="passMemberId">#OTK-0000</span>
                         </div>
-                        <div class="card-barcode">
+                        <div class="card-barcode" aria-hidden="true">
                             <span>||| | | |||| || | ||| |||| | ||</span>
                         </div>
                     </div>
-                </div>
+                </article>
             </div>
-            <p class="pass-hint"><i class="fa-solid fa-lightbulb"></i> Kartu ini tersimpan di browser Anda sebagai tanda pengenal resmi penjelajah anime.</p>
+            <p class="pass-hint"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Kartu ini tersimpan di browser Anda sebagai tanda pengenal resmi penjelajah anime.</p>
         </div>
     </div>
 
     <!-- FLOATING SCROLL TO TOP BUTTON -->
-    <button id="scrollTopBtn" class="scroll-top-btn" title="Kembali ke Atas" aria-label="Scroll to top">
-        <i class="fa-solid fa-arrow-up"></i>
+    <button id="scrollTopBtn" class="scroll-top-btn" title="Kembali ke Atas" aria-label="Kembali ke atas halaman">
+        <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <div id="toastContainer" class="toast-container"></div>
+    <!-- LIVE REGION UNTUK TOAST NOTIFICATION -->
+    <div id="toastContainer" class="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <script src="js/api.js"></script>
     <script src="js/storage.js"></script>

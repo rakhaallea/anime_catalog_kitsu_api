@@ -108,23 +108,23 @@ function renderAnime(animeList) {
         const bookmarked = isBookmarked(item.id);
 
         return `
-            <div class="anime-card" data-id="${item.id}">
-                <button class="bookmark-card-btn ${bookmarked ? 'active' : ''}" data-id="${item.id}" title="Simpan Favorit">
-                    <i class="fa-${bookmarked ? 'solid' : 'regular'} fa-heart"></i>
+            <article class="anime-card" data-id="${item.id}">
+                <button class="bookmark-card-btn ${bookmarked ? 'active' : ''}" data-id="${item.id}" title="Simpan Favorit" aria-label="Simpan ${attr.canonicalTitle} ke favorit" aria-pressed="${bookmarked ? 'true' : 'false'}">
+                    <i class="fa-${bookmarked ? 'solid' : 'regular'} fa-heart" aria-hidden="true"></i>
                 </button>
 
-                <div class="card-poster-box">
+                <figure class="card-poster-box">
                     <img src="${posterUrl}" alt="${attr.canonicalTitle}" loading="lazy">
-                    <span class="badge"><i class="fa-solid fa-tv"></i> ${attr.subtype || "N/A"}</span>
-                </div>
+                    <span class="badge"><i class="fa-solid fa-tv" aria-hidden="true"></i> ${attr.subtype || "N/A"}</span>
+                </figure>
                 <div class="anime-info">
                     <div class="meta-row">
-                        <span class="score"><i class="fa-solid fa-star"></i> ${score}</span>
-                        <span class="episodes"><i class="fa-solid fa-film"></i> ${attr.episodeCount ? attr.episodeCount + " Ep" : "Ongoing"}</span>
+                        <span class="score"><i class="fa-solid fa-star" aria-hidden="true"></i> ${score}</span>
+                        <span class="episodes"><i class="fa-solid fa-film" aria-hidden="true"></i> ${attr.episodeCount ? attr.episodeCount + " Ep" : "Ongoing"}</span>
                     </div>
                     <h3>${attr.canonicalTitle}</h3>
                 </div>
-            </div>
+            </article>
         `;
     }).join('');
 }
@@ -201,44 +201,44 @@ async function openAnimeModal(animeId) {
 
         modalBody.innerHTML = `
         <div class="modal-grid">
-            <div class="modal-poster">
-                <img src="${posterUrl}" alt="${attr.canonicalTitle}">
-            </div>
+            <figure class="modal-poster">
+                <img src="${posterUrl}" alt="Poster ${attr.canonicalTitle}">
+            </figure>
             <div class="modal-details">
-                <h2>${attr.canonicalTitle}</h2>
+                <h2 id="modalAnimeTitle">${attr.canonicalTitle}</h2>
                 <div class="modal-meta">
-                    <span class="badge"><i class="fa-solid fa-tv"></i> ${attr.subtype || 'N/A'}</span>
-                    <span class="badge score"><i class="fa-solid fa-star"></i> ${score}</span>
-                    <span class="badge status"><i class="fa-solid fa-circle-dot"></i> ${attr.status || 'N/A'}</span>
+                    <span class="badge"><i class="fa-solid fa-tv" aria-hidden="true"></i> ${attr.subtype || 'N/A'}</span>
+                    <span class="badge score"><i class="fa-solid fa-star" aria-hidden="true"></i> ${score}</span>
+                    <span class="badge status"><i class="fa-solid fa-circle-dot" aria-hidden="true"></i> ${attr.status || 'N/A'}</span>
                 </div>
-                <p><strong><i class="fa-solid fa-film"></i> Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
-                <p><strong><i class="fa-solid fa-calendar-days"></i> Rilis:</strong> ${attr.startDate || 'N/A'}</p>
+                <p><strong><i class="fa-solid fa-film" aria-hidden="true"></i> Episode:</strong> ${attr.episodeCount || 'N/A'}</p>
+                <p><strong><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Rilis:</strong> ${attr.startDate ? `<time datetime="${attr.startDate}">${attr.startDate}</time>` : 'N/A'}</p>
 
-                <button id="modalBookmarkBtn" class="modal-bookmark-btn ${bookmarked ? 'active' : ''}">
-                    <span class="icon"><i class="fa-${bookmarked ? 'solid' : 'regular'} fa-heart"></i></span>
+                <button id="modalBookmarkBtn" class="modal-bookmark-btn ${bookmarked ? 'active' : ''}" aria-pressed="${bookmarked ? 'true' : 'false'}" aria-label="${bookmarked ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}">
+                    <span class="icon"><i class="fa-${bookmarked ? 'solid' : 'regular'} fa-heart" aria-hidden="true"></i></span>
                     <span class="text">${bookmarked ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
                 </button>
 
-                <div class="modal-synopsis-section">
-                    <h3><i class="fa-solid fa-align-left"></i> Sinopsis</h3>
+                <section class="modal-synopsis-section" aria-labelledby="synopsisHeading">
+                    <h3 id="synopsisHeading"><i class="fa-solid fa-align-left" aria-hidden="true"></i> Sinopsis</h3>
                     <p class="modal-synopsis">${attr.synopsis || 'Sinopsis tidak tersedia.'}</p>
-                </div>
+                </section>
             </div>
         </div>
 
         ${youtubeId ? `
-            <div class="modal-trailer-box">
-                <h3><i class="fa-brands fa-youtube"></i> Trailer Resmi</h3>
+            <section class="modal-trailer-box" aria-labelledby="trailerHeading">
+                <h3 id="trailerHeading"><i class="fa-brands fa-youtube" aria-hidden="true"></i> Trailer Resmi</h3>
                 <div class="trailer-container">
                     <iframe 
                         src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
-                        title="YouTube video player" 
+                        title="Trailer Resmi ${attr.canonicalTitle}" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                     </iframe>
                 </div>
-            </div>
-        ` : '<p class="no-trailer"><i class="fa-solid fa-video-slash"></i> Trailer tidak tersedia untuk anime ini.</p>'}
+            </section>
+        ` : '<p class="no-trailer"><i class="fa-solid fa-video-slash" aria-hidden="true"></i> Trailer tidak tersedia untuk anime ini.</p>'}
         `;
 
         const modalBookmarkBtn = document.getElementById('modalBookmarkBtn');
@@ -248,14 +248,17 @@ async function openAnimeModal(animeId) {
 
                 // Update modal button UI
                 modalBookmarkBtn.classList.toggle('active', added);
-                modalBookmarkBtn.querySelector('.icon').innerHTML = added ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+                modalBookmarkBtn.setAttribute('aria-pressed', added ? 'true' : 'false');
+                modalBookmarkBtn.setAttribute('aria-label', added ? 'Hapus dari Favorit' : 'Tambah ke Favorit');
+                modalBookmarkBtn.querySelector('.icon').innerHTML = added ? '<i class="fa-solid fa-heart" aria-hidden="true"></i>' : '<i class="fa-regular fa-heart" aria-hidden="true"></i>';
                 modalBookmarkBtn.querySelector('.text').textContent = added ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
 
                 // Update card button UI in grid if present
                 const cardBookmarkBtn = animeContainer.querySelector(`.bookmark-card-btn[data-id="${anime.id}"]`);
                 if (cardBookmarkBtn) {
                     cardBookmarkBtn.classList.toggle('active', added);
-                    cardBookmarkBtn.innerHTML = added ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+                    cardBookmarkBtn.setAttribute('aria-pressed', added ? 'true' : 'false');
+                    cardBookmarkBtn.innerHTML = added ? '<i class="fa-solid fa-heart" aria-hidden="true"></i>' : '<i class="fa-regular fa-heart" aria-hidden="true"></i>';
                 }
 
                 if (currentView === 'bookmark') {
@@ -372,7 +375,8 @@ animeContainer.addEventListener('click', (e) => {
             } else {
                 const isNowBookmarked = isBookmarked(animeId);
                 bookmarkBtn.classList.toggle('active', isNowBookmarked);
-                bookmarkBtn.innerHTML = isNowBookmarked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+                bookmarkBtn.setAttribute('aria-pressed', isNowBookmarked ? 'true' : 'false');
+                bookmarkBtn.innerHTML = isNowBookmarked ? '<i class="fa-solid fa-heart" aria-hidden="true"></i>' : '<i class="fa-regular fa-heart" aria-hidden="true"></i>';
             }
 
             const title = animeObj.attributes?.canonicalTitle || 'Anime';
