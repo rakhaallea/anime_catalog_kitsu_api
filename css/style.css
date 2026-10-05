@@ -689,7 +689,7 @@ header {
     padding: 12px;
     display: flex;
     flex-direction: column;
-    height: 380px;
+    height: auto;
 }
 
 .skeleton-img {
@@ -698,6 +698,41 @@ header {
     border-radius: var(--rounded-lg);
     border: 2px solid var(--color-border);
     background: #E5E7EB;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.skeleton-info {
+    padding: 12px 4px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.skeleton-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.skeleton-pill {
+    height: 22px;
+    width: 65px;
+    border-radius: var(--rounded-md);
+    border: 2px solid var(--color-border);
+    background: #E5E7EB;
+}
+
+.skeleton-title {
+    height: 18px;
+    width: 90%;
+    border-radius: var(--rounded-md);
+    background: #E5E7EB;
+}
+
+.skeleton-title.short {
+    width: 55%;
 }
 
 .shimmer {
@@ -1560,6 +1595,11 @@ header {
 @media (max-width: 768px) {
     body {
         padding: 1rem 0.75rem 3rem;
+    }
+
+    #animeContainer {
+        gap: var(--spacing-md);
+        margin-bottom: 2.5rem;
     }
 
     .main-title {

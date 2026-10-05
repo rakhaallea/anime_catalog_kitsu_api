@@ -176,9 +176,17 @@ function showLoading() {
     if (!animeContainer) return;
 
     const skeletonCards = Array(8).fill(0).map(() => `
-        <div class="skeleton-card">
+        <article class="skeleton-card" aria-hidden="true">
             <div class="skeleton-img shimmer"></div>
-        </div>
+            <div class="skeleton-info">
+                <div class="skeleton-meta-row">
+                    <div class="skeleton-pill shimmer"></div>
+                    <div class="skeleton-pill shimmer"></div>
+                </div>
+                <div class="skeleton-title shimmer"></div>
+                <div class="skeleton-title short shimmer"></div>
+            </div>
+        </article>
     `).join('');
 
     animeContainer.innerHTML = skeletonCards;
